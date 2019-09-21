@@ -1,15 +1,24 @@
 package br.com.wirecard.order;
 
-import javax.money.MonetaryAmount;
+import java.math.BigDecimal;
 
-import br.com.wirecard.payment.PaymentType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+import br.com.wirecard.buyer.Buyer;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 /**
  * Order
  */
-public class Order {
-    private long id;
-    private MonetaryAmount amount;
-    private PaymentType paymentType;  
-      
+@Entity
+@Table(name="Orders")
+public class Order extends PanacheEntity{
+   public BigDecimal amount;
+   @JoinColumn(name = "buyer_id")
+   @OneToOne
+   public Buyer buyer;
+   public String type;
 }

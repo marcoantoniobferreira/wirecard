@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Fruit REST service</title>
+    <title>Wirecard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
     <!-- Load AngularJS -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -60,18 +60,30 @@
 <body ng-app="FruitManagement" ng-controller="FruitManagementController">
 
 <div class="container">
-    <h1>REST Service - Fruit</h1>
+    <h1>Wirecard</h1>
 
-    <h3>Add a fruit</h3>
+    <h3>Informe os dados</h3>
     <form ng-submit="add()">
         <div class="row">
-            <div class="col-6"><input type="text" placeholder="Name" ng-model="form.name" size="60"/></div>
+            <div class="col-6"><input type="text" placeholder="Nome do titular" ng-model="form.name" size="60" required/></div>
         </div>
         <div class="row">
-            <div class="col-6"><input type="text" placeholder="Description" ng-model="form.description" size="60"/></div>
+          <div class="col-3"><input type="text" placeholder="Valor" ng-model="form.amount" size="20"/></div>  
         </div>
-        <input type="submit" value="Save"/>
+        <div class="row">
+            <div class="col-3"><input type="text" max="16" placeholder="número do cartão" ng-model="form.cardNumber" size="60"/></div>
+        </div>
+        <div class="row">
+          <div class="col-6"><input type="date" placeholder="data de expiração" ng-model="form.expirationDate" size="60"/></div>  
+        </div>
+        <div class="row">
+          <div class="col-2"><input type="number" placeholder="CVV" ng-model="form.cvv" size="30"/></div>  
+        </div>
+        
+        <input type="submit" value="Enviar"/>
     </form>
+    <hr>
+    <input type="submit" value="Consultar status"/>
 
     <h3>Fruit List</h3>
     <div class="row">

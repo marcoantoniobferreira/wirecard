@@ -1,152 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>wirecard-challenge - 1.0-SNAPSHOT</title>
-    <style>
-        h1, h2, h3, h4, h5, h6 {
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-            line-height: 1.5;
+    <meta charset="utf-8"/>
+    <title>Wirecard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+      var app = angular.module("CardManagement", []);
+      //Controller Part
+      app.controller("CardManagementController", function ($scope, $http) {
+        //Initialize page with default data which is blank in this example
+        $scope.payment = [];
+        $scope.form = {
+          name: "",
+          cpf: ""
+        };
+        //Now load the data from server
+        _refreshPageData();
+        //HTTP POST methods for add fruits
+        $scope.add = function () {
+          var data = { "name": $scope.form.name, 
+                       "cpf": $scope.form.cpf,
+                       "email": $scope.form.email,
+                       "amount": $scope.form.amount,
+                       "cardNumber": $scope.form.cardNumber,
+                       "expirationDate": $scope.form.expirationDate,
+                       "cvv": $scope.form.cvv,
+                       "paymentType": $scope.form.paymentType };
+          $http({
+            method: "POST",
+            url: '/payment',
+            data: angular.toJson(data),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(_success, _error);
+        };
+        /* Private Methods */
+        //HTTP GET- get all fruits collection
+        function _refreshPageData() {
+          $http({
+            method: 'GET',
+            url: '/payment'
+          }).then(function successCallback(response) {
+            $scope.payment = response.data;
+          }, function errorCallback(response) {
+            console.log(response.statusText);
+          });
         }
-
-        h1 {
-            font-size: 2.5rem;
+        function _success(response) {
+          _refreshPageData();
+          _clearForm();
         }
-
-        h2 {
-            font-size: 2rem
+        function _error(response) {
+          alert(response.data.message || response.statusText);
         }
-
-        h3 {
-            font-size: 1.75rem
+        //Clear the form
+        function _clearForm() {
+          $scope.form.name = "";
+          $scope.form.description = "";
         }
-
-        h4 {
-            font-size: 1.5rem
-        }
-
-        h5 {
-            font-size: 1.25rem
-        }
-
-        h6 {
-            font-size: 1rem
-        }
-
-        .lead {
-            font-weight: 300;
-            font-size: 2rem;
-        }
-
-        .banner {
-            font-size: 2.7rem;
-            margin: 0;
-            padding: 2rem 1rem;
-            background-color: #00A1E2;
-            color: white;
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        }
-
-        code {
-            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 87.5%;
-            color: #e83e8c;
-            word-break: break-word;
-        }
-
-        .left-column {
-            padding: .75rem;
-            max-width: 75%;
-            min-width: 55%;
-        }
-
-        .right-column {
-            padding: .75rem;
-            max-width: 25%;
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-        }
-
-        li {
-            margin: 0.75rem;
-        }
-
-        .right-section {
-            margin-left: 1rem;
-            padding-left: 0.5rem;
-        }
-
-        .right-section h3 {
-            padding-top: 0;
-            font-weight: 200;
-        }
-
-        .right-section ul {
-            border-left: 0.3rem solid #00A1E2;
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-    </style>
+      });
+    </script>
 </head>
-<body>
-
-<div class="banner lead">
-    Your new Cloud-Native application is ready!
-</div>
+<body ng-app="CardManagement" ng-controller="CardManagementController">
 
 <div class="container">
-    <div class="left-column">
-        <p class="lead"> Congratulations, you have created a new Quarkus application.</p>
+    <h1>Wirecard</h1>
 
-        <h2>Why do you see this?</h2>
+    <h3>Informe os dados</h3>
+    <form ng-submit="add()">
+        <div class="row">
+            <div class="col-4">Nome do Titular:<input type="text" placeholder="Nome do titular" ng-model="form.name" size="60" required/></div>
+        </div>
+        <div class="row">
+            <div class="col-4">CPF: <input type="text" placeholder="CPF" ng-model="form.cpf" size="60" required></div>
+        </div>
+        <div class="row">
+            <div class="col-4">E-mail:<input type="email" placeholder="E-mail" ng-model="form.email" required></div>
+        </div>
+        <div class="row">
+          <div class="col-3">Valor:<input type="text" placeholder="Valor" ng-model="form.amount" size="20" required/></div>  
+        </div>
+        <div class="row">
+            <div class="col-3">Número do cartão<input type="text" max="16" placeholder="número do cartão" ng-model="form.cardNumber" size="60" required/></div>
+        </div>
+        <div class="row">
+          <div class="col-2">Data de expiração<input type="month" placeholder="data de expiração" ng-model="form.expirationDate" size="60" required/></div>  
+        </div>
+        <div class="row">
+          <div class="col-2">CVV<input type="number" placeholder="CVV" ng-model="form.cvv" size="30" required/></div>  
+        </div>
+        <div class="row">
+                <div class="col-3">
+                    Forma de Pagamento:
+                    <select placeholder="CVV" ng-model="form.paymentType"/>
+                        <option value="creditCard">Cartão de Crédito</option>
+                        <option value="boleto">Boleto</option>
+                    </select>
+                </div>  
+            </div>        
+        <input type="submit" value="Enviar"/>
+    </form>
+    <hr>
+    <input type="submit" value="Consultar status"/>
 
-        <p>This page is served by Quarkus. The source is in
-            <code>src/main/resources/META-INF/resources/index.html</code>.</p>
-
-        <h2>What can I do from here?</h2>
-
-        <p>If not already done, run the application in <em>dev mode</em> using: <code>mvn compile quarkus:dev</code>.
-        </p>
-        <ul>
-            <li>Add REST resources, Servlets, functions and other services in <code>src/main/java</code>.</li>
-            <li>Your static assets are located in <code>src/main/resources/META-INF/resources</code>.</li>
-            <li>Configure your application in <code>src/main/resources/application.properties</code>.
-            </li>
-        </ul>
-
-        <h2>How do I get rid of this page?</h2>
-        <p>Just delete the <code>src/main/resources/META-INF/resources/index.html</code> file.</p>
+    <h3>Fruit List</h3>
+    <div class="row">
+        <div class="col-4">Name</div>
+        <div class="col-8">Description</div>
     </div>
-    <div class="right-column">
-        <div class="right-section">
-            <h3>Application</h3>
-            <ul>
-                <li>GroupId: br.com.wirecard</li>
-                <li>ArtifactId: wirecard-challenge</li>
-                <li>Version: 1.0-SNAPSHOT</li>
-                <li>Quarkus Version: 0.21.2</li>
-            </ul>
-        </div>
-        <div class="right-section">
-            <h3>Next steps</h3>
-            <ul>
-                <li><a href="https://quarkus.io/guides/maven-tooling.html">Setup your IDE</a></li>
-                <li><a href="https://quarkus.io/guides/getting-started-guide.html">Getting started</a></li>
-                <li><a href="https://quarkus.io">Quarkus Web Site</a></li>
-            </ul>
-        </div>
+    <div class="row" ng-repeat="card in cards">
+        <div class="col-4">{{ fruit.name }}</div>
+        <div class="col-8">{{ fruit.description }}</div>
     </div>
 </div>
-
 
 </body>
 </html>
