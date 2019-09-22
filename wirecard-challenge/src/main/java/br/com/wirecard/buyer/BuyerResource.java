@@ -32,7 +32,7 @@ public class BuyerResource {
     public List<Buyer> listBuyers(){
         return Buyer.listAll();
     } 
-    @Provider
+    /*@Provider
     public static class ErrorMapper implements ExceptionMapper<Exception> {
         @Override
         public Response toResponse(Exception exception) {
@@ -44,5 +44,5 @@ public class BuyerResource {
                     .entity(Json.createObjectBuilder().add("error", exception.getMessage()).add("code", code).build())
                     .build();
         }
-    }
+    }*/
 }

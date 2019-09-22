@@ -5,5 +5,6 @@ package br.com.wirecard.payment;
  */
 public interface PaymentStrategy {
     void processPayment();
+    long processPaymentWithCheckout(Checkout checkout);
     void cancelPayment();        
 }

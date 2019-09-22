@@ -53,9 +53,23 @@ public class PaymentResource {
         order.type = "CC";        
         return Response.ok(creditCard).status(201).build();
     }
+    @POST
+    @Transactional
+    @Path("/checkout")
+    public Response createPaymentWithCheckout(Checkout checkout){
+        if (checkout.paymentType.equals("creditCard")) {
+            CreditCard cc = new CreditCard();
+            cc.processPaymentWithCheckout(checkout);
+        }else{
+            Boleto bo = new Boleto();
+            bo.processPaymentWithCheckout(checkout);
+        }        
+        return Response.ok(checkout).status(201).build();    
+    }
     @GET
     @Path("/paymentStatus/{id}")
-    public List getStatusPayment(@PathParam Long id){        
+    public List getStatusPayment(@PathParam Long id){
+        System.out.println(id);        
         Order order = Order.findById(id);
         if (order == null) {
             throw new WebApplicationException("The order with id " + id + " does not exist.", 404);
